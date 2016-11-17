@@ -34,8 +34,8 @@ public class Application {
 	}
 	
 	private static String correctWord(ArbreTrie diccionari, String word){
-		word= "*"+word+"* ";
 		Set<String> corrections= diccionari.samePrefix(word);
+		word= "*"+word+"* ";
 		for(String c:corrections){
 			word+="("+c+")";
 		}
@@ -43,12 +43,22 @@ public class Application {
 	}
 	
 	private static ArbreTrie loadDiccionari() throws FileNotFoundException{
-		ArbreTrie diccionari=new ArbreTrieTau(25);
+		ArbreTrie diccionari=new ArbreTrieTau();
 		 BufferedReader br = new BufferedReader(new FileReader(new File("Diccionari.txt")));
 		 
 		 try{
 			 for(String line=br.readLine();line!=null;line=br.readLine()){
-				diccionari.addWord(line);
+				 String aux=line;
+				 while(line.length()>=1){
+					 if(Character.isLetter(line.charAt(0))) aux+=line.charAt(0);
+					 else if(line.charAt(0)=='\n'){
+						 System.out.println("Adding: " + aux);
+						 diccionari.addWord(aux);
+						 aux="";
+					 }
+					 if(line.length()==1)break;
+					 line=line.substring(1);
+				 }
 			 }
 			 br.close();
 		 }
